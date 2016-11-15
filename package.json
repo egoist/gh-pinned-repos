@@ -1,0 +1,40 @@
+{
+  "name": "gh-pinned-repos",
+  "version": "0.0.0",
+  "description": "API service for retriving pinned repos on GitHub.",
+  "license": "MIT",
+  "repository": "egoist/gh-pinned-repos",
+  "author": {
+    "name": "EGOIST",
+    "email": "0x142857@gmail.com",
+    "url": "github.com/egoist"
+  },
+  "engines": {
+    "node": "7"
+  },
+  "scripts": {
+    "test": "eslint *.js",
+    "start": "micro -p 3000"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    ""
+  ],
+  "devDependencies": {
+    "eslint": "latest",
+    "eslint-config-egoist": "latest"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "eslintConfig": {
+    "extends": "egoist/esnext"
+  },
+  "dependencies": {
+    "aimer": "^1.3.0",
+    "lru-cache": "^4.0.1",
+    "micro": "^6.1.0"
+  }
+}
