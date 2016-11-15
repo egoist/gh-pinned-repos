@@ -16,7 +16,8 @@ function ghPinnedRepos(username) {
 
       const result = []
       pinned.each((index, item) => {
-        const lanaguage = $(item).find('p.mb-0').contents().get(2).data.trim()
+        let language = $(item).find('p.mb-0').contents().get(2)
+        lanaguage = language && language.data.trim()
         const forks = $(item).find('a[href$="/network"]').text().trim()
         result[index] = {
           repo: $(item).find('.repo').text(),
