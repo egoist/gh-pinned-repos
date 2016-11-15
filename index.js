@@ -43,6 +43,10 @@ module.exports = async function (req, res) {
   if (!username) {
     res.setHeader('Content-Type', 'text/html')
     return send(res, 200, `
+  <head>
+    <meta charset="utf-8" />
+    <title>GitHub pinned repos API</title>
+  </head>
   <style>body {font-family: Helvetica, serif;margin: 30px;}</style>
   <p>GET /?username=GITHUB_USERNAME</p>
 
