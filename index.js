@@ -18,10 +18,14 @@ function ghPinnedRepos(username) {
       pinned.each((index, item) => {
         let language = $(item).find('p.mb-0').contents().get(2)
         language = language && language.data.trim()
+
+        let owner = $(item).find('.owner').text().trim()
+        owner = owner || username
+
         const forks = $(item).find('a[href$="/network"]').text().trim()
         result[index] = {
           repo: $(item).find('.repo').text(),
-          owner: username,
+          owner,
           description: $(item).find('.pinned-repo-desc').html().trim(),
           language: language || undefined,
           stars: $(item).find('a[href$="/stargazers"]').text().trim(),
