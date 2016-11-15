@@ -14,7 +14,8 @@
   },
   "scripts": {
     "test": "eslint *.js",
-    "start": "micro -p 3000"
+    "start": "micro -p 3000",
+    "deploy": "micro -e NODE_ENV=production"
   },
   "files": [
     "index.js"
