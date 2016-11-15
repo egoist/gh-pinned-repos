@@ -80,7 +80,7 @@ module.exports = async function (req, res) {
     result = cachedResult
   } else {
     result = await ghPinnedRepos(username)
-    cache.set(username, result)
+    cache.set(username, JSON.stringify(result))
   }
   send(res, 200, result)
 }
