@@ -37,6 +37,15 @@ function ghPinnedRepos(username) {
 }
 
 module.exports = async function (req, res) {
+  /* allow cors from any origin */
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Request-Method', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET')
+  res.setHeader('Access-Control-Allow-Headers', '*')
+  if (req.method === 'OPTIONS') {
+    return send(res, 200)
+  }
+
   const {pathname, query} = url.parse(req.url)
   const username = qs.parse(query).username
 
