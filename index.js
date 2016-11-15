@@ -52,7 +52,7 @@ module.exports = async function (req, res) {
     </form>
   </p>
 
-  <p>made by <a href="https://github.com/egoist">@egoist</a></p>
+  <p>made by <a href="https://github.com/egoist">@egoist</a> · <a href="https://github.com/egoist/gh-pinned-repos">source code</a></p>
 `)
   }
 
