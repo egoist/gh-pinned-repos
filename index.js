@@ -5,7 +5,7 @@ const {send} = require('micro')
 
 const cache = require('lru-cache')({
   max: 1024 * 1024,
-  maxAge: 86400
+  maxAge: 86400 * 30
 })
 
 function ghPinnedRepos(username) {
@@ -47,7 +47,7 @@ module.exports = async function (req, res) {
   }
 
   const {pathname, query} = url.parse(req.url)
-  const username = qs.parse(query).username
+  const {username, refresh} = qs.parse(query)
 
   if (pathname === '/favicon.ico') {
     return send(res, 404, '')
@@ -76,7 +76,7 @@ module.exports = async function (req, res) {
 
   let result
   const cachedResult = cache.get(username)
-  if (cachedResult) {
+  if (cachedResult && !refresh) {
     result = cachedResult
   } else {
     result = await ghPinnedRepos(username)
