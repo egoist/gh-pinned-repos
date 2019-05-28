@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "alias": ["gh-pinned-repos.now.sh"],
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@now/node"
+    }
+  ]
+}

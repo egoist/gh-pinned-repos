@@ -7,32 +7,15 @@
   "author": {
     "name": "EGOIST",
     "email": "0x142857@gmail.com",
-    "url": "github.com/egoist"
-  },
-  "engines": {
-    "node": "7"
+    "url": "https://github.com/egoist"
   },
   "scripts": {
     "test": "eslint *.js",
-    "start": "micro -p 3000",
-    "deploy": "now -e NODE_ENV=production"
+    "dev": "micro -p 3000"
   },
   "files": [
     "index.js"
   ],
-  "keywords": [
-    ""
-  ],
-  "devDependencies": {
-    "eslint": "latest",
-    "eslint-config-egoist": "latest"
-  },
-  "jest": {
-    "testEnvironment": "node"
-  },
-  "eslintConfig": {
-    "extends": "egoist/esnext"
-  },
   "dependencies": {
     "aimer": "^1.3.0",
     "lru-cache": "^4.0.1",
