@@ -30,7 +30,7 @@ function ghPinnedRepos(username) {
         .text()
         .trim()
       result[index] = {
-        owner: owner || undefined,
+        owner: owner || username,
         repo,
         description: $(item)
           .find('.pinned-item-desc')
