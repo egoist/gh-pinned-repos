@@ -32,7 +32,7 @@ function ghPinnedRepos(username) {
       result[index] = {
         owner: owner || username,
         repo,
-        link: "https://github.com"+owner+"/"+repo,
+        link: "https://github.com"+owner || username+"/"+repo,
         description: $(item)
           .find('.pinned-item-desc')
           .text()
