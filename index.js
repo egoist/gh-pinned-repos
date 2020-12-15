@@ -32,6 +32,7 @@ function ghPinnedRepos(username) {
       result[index] = {
         owner: owner || username,
         repo,
+        link: "https://github.com/"+(owner || username)+"/"+repo,
         description: $(item)
           .find('.pinned-item-desc')
           .text()
@@ -79,6 +80,7 @@ module.exports = async function(req, res) {
   </p>
 
   <p>made by <a href="https://github.com/egoist">@egoist</a> · <a href="https://github.com/egoist/gh-pinned-repos">source code</a></p>
+  <p>Added repo links to the responce by <a href="https://github.com/nsadisha">@nsadisha</a></p>
 `
     )
   }
