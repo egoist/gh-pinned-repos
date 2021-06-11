@@ -1,6 +1,6 @@
 # gh-pinned-repos
 
-https://gh-pinned-repos.now.sh
+https://gh-pinned-repos.egoist.sh
 
 ## License
 
