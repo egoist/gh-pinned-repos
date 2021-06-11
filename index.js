@@ -29,6 +29,9 @@ function ghPinnedRepos(username) {
         .find('a[href$="/network/members"]')
         .text()
         .trim()
+      const languageColor = $(item)
+        .find('.repo-language-color')
+        .css( "background-color" );
       result[index] = {
         owner: owner || username,
         repo,
@@ -37,6 +40,7 @@ function ghPinnedRepos(username) {
           .text()
           .trim(),
         language: language || undefined,
+        languageColor: languageColor || undefined,
         stars: stars || 0,
         forks: forks || 0
       }
