@@ -22,9 +22,9 @@ function ghPinnedRepos(username) {
       const owner =$(item).find('.owner').text()
       const repo = $(item).find('.repo').text()
       const stars = $(item)
-      .find('a[href$="/stargazers"]')
-      .text()
-      .trim()
+        .find('a[href$="/stargazers"]')
+        .text()
+        .trim()
       const forks = $(item)
         .find('a[href$="/network/members"]')
         .text()
@@ -41,8 +41,8 @@ function ghPinnedRepos(username) {
           .trim(),
         language: language || undefined,
         languageColor: languageColor || undefined,
-        stars: stars || 0,
-        forks: forks || 0
+        stars: parseInt(stars) || 0,
+        forks: parseInt(forks) || 0
       }
     })
     return result
