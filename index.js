@@ -26,7 +26,7 @@ function ghPinnedRepos(username) {
       .text()
       .trim()
       const forks = $(item)
-        .find('a[href$="/network/members"]')
+        .find('a[href$="/network"]')
         .text()
         .trim()
       const languageColor = $(item)
