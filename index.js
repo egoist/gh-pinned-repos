@@ -15,30 +15,19 @@ function ghPinnedRepos(username) {
 
     const result = []
     pinned.each((index, item) => {
-      let language = $(item)
-        .find('[itemprop="programmingLanguage"]')
-        .text()
 
-      const owner =$(item).find('.owner').text()
-      const repo = $(item).find('.repo').text()
-      const stars = $(item)
-      .find('a[href$="/stargazers"]')
-      .text()
-      .trim()
-      const forks = $(item)
-        .find('a[href$="/network"]')
-        .text()
-        .trim()
-      const languageColor = $(item)
-        .find('.repo-language-color')
-        .css( "background-color" );
+      const language = getLanguage($, item)
+      const owner = getOwner($, item)
+      const repo = getRepo($, item)
+      const description = getDescription($, item)
+      const stars = getStars($, item)
+      const forks = getForks($, item)
+      const languageColor = getLanguageColor($, item)
+
       result[index] = {
         owner: owner || username,
         repo,
-        description: $(item)
-          .find('.pinned-item-desc')
-          .text()
-          .trim(),
+        description: description || undefined,
         language: language || undefined,
         languageColor: languageColor || undefined,
         stars: stars || 0,
@@ -48,6 +37,81 @@ function ghPinnedRepos(username) {
     return result
   })
 }
+
+function getLanguage($, item) {
+  try {
+    return $(item)
+      .find('[itemprop="programmingLanguage"]')
+      .text()
+  } catch (error) {
+    return undefined;
+  }
+}
+
+function getOwner($, item) {
+  try {
+    return $(item)
+      .find('.owner')
+      .text()
+  } catch (error) {
+    return undefined;
+  }
+}
+
+function getRepo($, item) {
+  try {
+    return $(item)
+      .find('.repo')
+      .text()
+  } catch (error) {
+    return undefined;
+  }
+}
+
+function getDescription($, item) {
+  try {
+    return $(item)
+      .find('.pinned-item-desc')
+      .text()
+      .trim()
+  } catch (error) {
+    return undefined;
+  }
+}
+
+function getStars($, item) {
+  try {
+    return parseInt($(item)
+      .find('a[href$="/stargazers"]')
+      .text()
+      .trim())
+  } catch (error) {
+    return 0;
+  }
+}
+
+function getForks($, item) {
+  try {
+    return parseInt($(item)
+      .find('a[href$="/network"]')
+      .text()
+      .trim())
+  } catch (error) {
+    return 0;
+  }
+}
+
+function getLanguageColor($, item) {
+  try {
+    return $(item)
+      .find('.repo-language-color')
+      .css("background-color");
+  } catch (error) {
+    return undefined;
+  }
+}
+
+
 
 module.exports = async function(req, res) {
   /* allow cors from any origin */
