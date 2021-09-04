@@ -27,6 +27,7 @@ function ghPinnedRepos(username) {
       result[index] = {
         owner: owner || username,
         repo,
+        link: "https://github.com/" + (owner || username) + "/" + repo,
         description: description || undefined,
         website: website || undefined,
         language: language || undefined,
