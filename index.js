@@ -9,43 +9,41 @@ const cache = require("lru-cache")({
 });
 
 function ghPinnedRepos(username) {
-  return aimer(`https://github.com/${username}`).then(($) => {
+  return aimer(`https://github.com/${username}`).then(async ($) => {
     const pinned = $(".pinned-item-list-item.public");
+
+    // if empty
     if (!pinned || pinned.length === 0) return [];
 
     const result = [];
-    pinned.each((index, item) => {
-      const language = getLanguage($, item);
-      const owner = getOwner($, item);
-      const repo = getRepo($, item);
-      const description = getDescription($, item);
-      const website = getWebsite($, repo);
-      const stars = getStars($, item);
-      const forks = getForks($, item);
-      const languageColor = getLanguageColor($, item);
+    for (const [index, item] of Object.entries(pinned)) {
+      if (!isNaN(index)) {
+        const owner = getOwner($, item);
+        const repo = getRepo($, item);
+        const link = "https://github.com/" + (owner || username) + "/" + repo;
+        const description = getDescription($, item);
+        const website = await getWebsite(link);
+        const language = getLanguage($, item);
+        const languageColor = getLanguageColor($, item);
+        const stars = getStars($, item);
+        const forks = getForks($, item);
 
-      result[index] = {
-        owner: owner || username,
-        repo,
-        link: "https://github.com/" + (owner || username) + "/" + repo,
-        description: description || undefined,
-        website: website || undefined,
-        language: language || undefined,
-        languageColor: languageColor || undefined,
-        stars: stars || 0,
-        forks: forks || 0,
-      };
-    });
+        result[index] = {
+          owner: owner || username,
+          repo,
+          link,
+          description: description || undefined,
+          website: website || undefined,
+          language: language || undefined,
+          languageColor: languageColor || undefined,
+          stars: stars || 0,
+          forks: forks || 0,
+        };
+      }
+    }
+    // });
     return result;
   });
-}
-
-function getLanguage($, item) {
-  try {
-    return $(item).find('[itemprop="programmingLanguage"]').text();
-  } catch (error) {
-    return undefined;
-  }
 }
 
 function getOwner($, item) {
@@ -72,19 +70,37 @@ function getDescription($, item) {
   }
 }
 
-function getWebsite($, repo) {
-  return aimer(repo).then(($) => {
-    const site = $(".details-reset.details-overlay");
-    if (!pinned || pinned.length === 0) return [];
-
-    site.each((index, item) => {
+function getWebsite(repo) {
+  return aimer(repo)
+    .then(($) => {
       try {
-        return $(item).find(".text-bold").text();
+        const site = $(".BorderGrid-cell");
+        if (!site || site.length === 0) return [];
+
+        let href;
+        site.each((index, item) => {
+          if (index == 0) {
+            href = getHREF($, item);
+          }
+        });
+        return href;
       } catch (error) {
+        console.error(error);
         return undefined;
       }
+    })
+    .catch((error) => {
+      console.error(error);
+      return undefined;
     });
-  });
+}
+
+function getHREF($, item) {
+  try {
+    return $(item).find('a[href^="https"]').attr("href").trim();
+  } catch (error) {
+    return undefined;
+  }
 }
 
 function getStars($, item) {
@@ -100,6 +116,14 @@ function getForks($, item) {
     return parseInt($(item).find('a[href$="/network"]').text().trim());
   } catch (error) {
     return 0;
+  }
+}
+
+function getLanguage($, item) {
+  try {
+    return $(item).find('[itemprop="programmingLanguage"]').text();
+  } catch (error) {
+    return undefined;
   }
 }
 
@@ -157,6 +181,5 @@ module.exports = async function (req, res) {
     result = await ghPinnedRepos(username);
     cache.set(username, JSON.stringify(result));
   }
-  console.log(result);
   send(res, 200, result);
 };
