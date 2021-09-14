@@ -22,6 +22,7 @@ function ghPinnedRepos(username) {
         const repo = getRepo($, item);
         const link = "https://github.com/" + (owner || username) + "/" + repo;
         const description = getDescription($, item);
+        const image = await getImage(link);
         const website = await getWebsite(link);
         const language = getLanguage($, item);
         const languageColor = getLanguageColor($, item);
@@ -33,6 +34,7 @@ function ghPinnedRepos(username) {
           repo,
           link,
           description: description || undefined,
+          image: image || undefined,
           website: website || undefined,
           language: language || undefined,
           languageColor: languageColor || undefined,
@@ -98,6 +100,40 @@ function getWebsite(repo) {
 function getHREF($, item) {
   try {
     return $(item).find('a[href^="https"]').attr("href").trim();
+  } catch (error) {
+    return undefined;
+  }
+}
+
+function getImage(repo) {
+  return aimer(repo)
+    .then(($) => {
+      try {
+        const site = $("meta");
+        if (!site || site.length === 0) return [];
+
+        let href;
+        site.each((index, item) => {
+          const attr = $(item).attr("property")
+          if (attr == "og:image") {
+            href = getSRC($, item);
+          }
+        });
+        return href;
+      } catch (error) {
+        console.error(error);
+        return undefined;
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      return undefined;
+    });
+}
+
+function getSRC($, item) {
+  try {
+    return $(item).attr("content").trim();
   } catch (error) {
     return undefined;
   }
