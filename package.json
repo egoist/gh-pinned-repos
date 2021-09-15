@@ -11,7 +11,8 @@
   },
   "scripts": {
     "test": "eslint *.js",
-    "dev": "micro -p 3000"
+    "dev": "micro -p 3000",
+    "format": "prettier -w index.js"
   },
   "files": [
     "index.js"
@@ -20,5 +21,9 @@
     "aimer": "^1.3.0",
     "lru-cache": "^4.0.1",
     "micro": "^6.1.0"
+  },
+  "devDependencies": {
+    "@egoist/prettier-config": "^0.1.0",
+    "prettier": "^2.4.0"
   }
 }
