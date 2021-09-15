@@ -5,115 +5,173 @@ const { send } = require('micro')
 
 const cache = require('lru-cache')({
   max: 1024 * 1024,
-  maxAge: 86400 * 30
+  maxAge: 86400 * 30,
 })
 
 function ghPinnedRepos(username) {
-  return aimer(`https://github.com/${username}`).then($ => {
+  return aimer(`https://github.com/${username}`).then(async ($) => {
     const pinned = $('.pinned-item-list-item.public')
+
+    // if empty
     if (!pinned || pinned.length === 0) return []
 
     const result = []
-    pinned.each((index, item) => {
+    for (const [index, item] of Object.entries(pinned)) {
+      if (!isNaN(index)) {
+        const owner = getOwner($, item)
+        const repo = getRepo($, item)
+        const link = 'https://github.com/' + (owner || username) + '/' + repo
+        const description = getDescription($, item)
+        const image = await getImage(link)
+        const website = await getWebsite(link)
+        const language = getLanguage($, item)
+        const languageColor = getLanguageColor($, item)
+        const stars = getStars($, item)
+        const forks = getForks($, item)
 
-      const language = getLanguage($, item)
-      const owner = getOwner($, item)
-      const repo = getRepo($, item)
-      const description = getDescription($, item)
-      const stars = getStars($, item)
-      const forks = getForks($, item)
-      const languageColor = getLanguageColor($, item)
-
-      result[index] = {
-        owner: owner || username,
-        repo,
-        description: description || undefined,
-        language: language || undefined,
-        languageColor: languageColor || undefined,
-        stars: stars || 0,
-        forks: forks || 0
+        result[index] = {
+          owner: owner || username,
+          repo,
+          link,
+          description: description || undefined,
+          image: image || undefined,
+          website: website || undefined,
+          language: language || undefined,
+          languageColor: languageColor || undefined,
+          stars: stars || 0,
+          forks: forks || 0,
+        }
       }
-    })
+    }
+    // });
     return result
   })
 }
 
-function getLanguage($, item) {
-  try {
-    return $(item)
-      .find('[itemprop="programmingLanguage"]')
-      .text()
-  } catch (error) {
-    return undefined;
-  }
-}
-
 function getOwner($, item) {
   try {
-    return $(item)
-      .find('.owner')
-      .text()
+    return $(item).find('.owner').text()
   } catch (error) {
-    return undefined;
+    return undefined
   }
 }
 
 function getRepo($, item) {
   try {
-    return $(item)
-      .find('.repo')
-      .text()
+    return $(item).find('.repo').text()
   } catch (error) {
-    return undefined;
+    return undefined
   }
 }
 
 function getDescription($, item) {
   try {
-    return $(item)
-      .find('.pinned-item-desc')
-      .text()
-      .trim()
+    return $(item).find('.pinned-item-desc').text().trim()
   } catch (error) {
-    return undefined;
+    return undefined
+  }
+}
+
+function getWebsite(repo) {
+  return aimer(repo)
+    .then(($) => {
+      try {
+        const site = $('.BorderGrid-cell')
+        if (!site || site.length === 0) return []
+
+        let href
+        site.each((index, item) => {
+          if (index == 0) {
+            href = getHREF($, item)
+          }
+        })
+        return href
+      } catch (error) {
+        console.error(error)
+        return undefined
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+      return undefined
+    })
+}
+
+function getHREF($, item) {
+  try {
+    return $(item).find('a[href^="https"]').attr('href').trim()
+  } catch (error) {
+    return undefined
+  }
+}
+
+function getImage(repo) {
+  return aimer(repo)
+    .then(($) => {
+      try {
+        const site = $('meta')
+        if (!site || site.length === 0) return []
+
+        let href
+        site.each((index, item) => {
+          const attr = $(item).attr('property')
+          if (attr == 'og:image') {
+            href = getSRC($, item)
+          }
+        })
+        return href
+      } catch (error) {
+        console.error(error)
+        return undefined
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+      return undefined
+    })
+}
+
+function getSRC($, item) {
+  try {
+    return $(item).attr('content').trim()
+  } catch (error) {
+    return undefined
   }
 }
 
 function getStars($, item) {
   try {
-    return parseInt($(item)
-      .find('a[href$="/stargazers"]')
-      .text()
-      .trim())
+    return $(item).find('a[href$="/stargazers"]').text().trim()
   } catch (error) {
-    return 0;
+    return 0
   }
 }
 
 function getForks($, item) {
   try {
-    return parseInt($(item)
-      .find('a[href$="/network"]')
-      .text()
-      .trim())
+    return $(item).find('a[href$="/network"]').text().trim()
   } catch (error) {
-    return 0;
+    return 0
+  }
+}
+
+function getLanguage($, item) {
+  try {
+    return $(item).find('[itemprop="programmingLanguage"]').text()
+  } catch (error) {
+    return undefined
   }
 }
 
 function getLanguageColor($, item) {
   try {
-    return $(item)
-      .find('.repo-language-color')
-      .css("background-color");
+    return $(item).find('.repo-language-color').css('background-color')
   } catch (error) {
-    return undefined;
+    return undefined
   }
 }
 
-
-
-module.exports = async function(req, res) {
+module.exports = async function (req, res) {
   /* allow cors from any origin */
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Request-Method', '*')
@@ -147,7 +205,7 @@ module.exports = async function(req, res) {
   </p>
 
   <p>made by <a href="https://github.com/egoist">@egoist</a> · <a href="https://github.com/egoist/gh-pinned-repos">source code</a></p>
-`
+`,
     )
   }
 
