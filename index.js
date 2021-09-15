@@ -149,7 +149,7 @@ function getStars($, item) {
 
 function getForks($, item) {
   try {
-    return $(item).find('a[href$="/network"]').text().trim()
+    return $(item).find('a[href$="/network/members"]').text().trim()
   } catch (error) {
     return 0
   }
