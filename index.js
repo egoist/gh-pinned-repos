@@ -141,7 +141,7 @@ function getSRC($, item) {
 
 function getStars($, item) {
   try {
-    return parseInt($(item).find('a[href$="/stargazers"]').text().trim())
+    return $(item).find('a[href$="/stargazers"]').text().trim()
   } catch (error) {
     return 0
   }
@@ -149,7 +149,7 @@ function getStars($, item) {
 
 function getForks($, item) {
   try {
-    return parseInt($(item).find('a[href$="/network"]').text().trim())
+    return $(item).find('a[href$="/network"]').text().trim()
   } catch (error) {
     return 0
   }
