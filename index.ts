@@ -214,7 +214,7 @@ async function handler(request: Request): Promise<Response> {
 
     <p>made by <a href="https://github.com/egoist">@egoist</a> · <a href="https://github.com/egoist/gh-pinned-repos">source code</a></p>
   `,
-      { headers },
+      { headers }
     );
   }
 
@@ -224,11 +224,11 @@ async function handler(request: Request): Promise<Response> {
     result = cachedResult;
   } else {
     result = await ghPinnedRepos(username);
-    cache.set(username, JSON.stringify(result));
+    cache.set(username, result);
   }
   headers["content-type"] = "application/json";
   return new Response(JSON.stringify(result), { headers });
 }
 
 serve(handler);
-console.log(`> Open http://localhost:8000`)
+console.log(`> Open http://localhost:8000`);
