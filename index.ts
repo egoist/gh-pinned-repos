@@ -32,7 +32,9 @@ async function ghPinnedRepos(username: string) {
     const repo = getRepo($, item);
     const link = "https://github.com/" + (owner || username) + "/" + repo;
     const description = getDescription($, item);
-    const image = await getImage(link);
+    const image = `https://opengraph.githubassets.com/1/${
+      owner || username
+    }/${repo}`;
     const website = await getWebsite(link);
     const language = getLanguage($, item);
     const languageColor = getLanguageColor($, item);
@@ -44,7 +46,7 @@ async function ghPinnedRepos(username: string) {
       repo,
       link,
       description: description || undefined,
-      image: image || undefined,
+      image: image,
       website: website || undefined,
       language: language || undefined,
       languageColor: languageColor || undefined,
