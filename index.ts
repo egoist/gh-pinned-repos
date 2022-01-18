@@ -1,4 +1,4 @@
-import { LRU } from "https://deno.land/x/lru@1.0.2/mod.ts";
+import LRU from "https://esm.sh/quick-lru@6.0.2";
 import { serve } from "https://deno.land/std@0.121.0/http/server.ts";
 import {
   Cheerio,
@@ -15,7 +15,9 @@ const aimer = async (url: string) => {
   return cheerio.load(html);
 };
 
-const cache = new LRU(500);
+const cache = new LRU({
+  maxSize: 500,
+});
 
 async function ghPinnedRepos(username: string) {
   const $ = await aimer(`https://github.com/${username}`);
@@ -222,6 +224,12 @@ async function handler(request: Request): Promise<Response> {
   const cachedResult = cache.get(username);
   if (cachedResult && !refresh) {
     result = cachedResult;
+    // stale-while-revalidate
+    ghPinnedRepos(username)
+      .then((data) => {
+        cache.set(username, data);
+      })
+      .catch((error) => {});
   } else {
     result = await ghPinnedRepos(username);
     cache.set(username, result);
