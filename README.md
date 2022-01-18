@@ -1,6 +1,4 @@
-# gh-pinned-repos
-
-https://gh-pinned-repos.egoist.sh
+# ⚠ Deploy this to your own Vercel account instead
 
 ## License
 
