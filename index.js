@@ -114,8 +114,8 @@ function getImage(repo) {
 
         let href
         site.each((index, item) => {
-          const attr = $(item).attr('name')
-          if (attr == 'twitter:image:src') {
+          const name = $(item).attr('name')
+          if (name == 'twitter:image:src') {
             href = getSRC($, item)
           }
         })
