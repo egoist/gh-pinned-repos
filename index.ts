@@ -6,7 +6,7 @@ import {
   Root,
   TagElement,
   TextElement,
-} from "https://deno.land/x/cheerio@1.0.4/mod.ts";
+} from "https://deno.land/x/cheerio@1.0.7/mod.ts";
 
 type Element = TagElement | TextElement;
 
@@ -21,7 +21,7 @@ const cache = new LRU({
 
 async function ghPinnedRepos(username: string) {
   const $ = await aimer(`https://github.com/${username}`);
-  const pinned = $(".pinned-item-list-item.public").toArray();
+  const pinned = $(".pinned-item-list-item").toArray();
 
   // if empty
   if (!pinned || pinned.length === 0) return [];
@@ -38,7 +38,7 @@ async function ghPinnedRepos(username: string) {
     const website = await getWebsite(link);
     const language = getLanguage($, item);
     const languageColor = getLanguageColor($, item);
-    const stars = getStars($, item);
+    const stars = parseInt(getStars($, item));
     const forks = getForks($, item);
 
     result[index] = {
