@@ -38,7 +38,7 @@ async function ghPinnedRepos(username: string) {
     const website = await getWebsite(link);
     const language = getLanguage($, item);
     const languageColor = getLanguageColor($, item);
-    const stars = parseInt(getStars($, item));
+    const stars = getStars($, item);
     const forks = getForks($, item);
 
     result[index] = {
@@ -151,7 +151,7 @@ function getSRC($: Cheerio & Root, item: Element) {
 
 function getStars($: Cheerio & Root, item: Element) {
   try {
-    return $(item).find('a[href$="/stargazers"]').text().trim();
+    return parseInt($(item).find('a[href$="/stargazers"]').text().trim());
   } catch (error) {
     return 0;
   }
@@ -159,7 +159,7 @@ function getStars($: Cheerio & Root, item: Element) {
 
 function getForks($: Cheerio & Root, item: Element) {
   try {
-    return $(item).find('a[href$="/network/members"]').text().trim();
+    return parseInt($(item).find('a[href$="/forks"]').text().trim());
   } catch (error) {
     return 0;
   }
