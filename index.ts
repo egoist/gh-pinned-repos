@@ -6,7 +6,7 @@ import {
   Root,
   TagElement,
   TextElement,
-} from "https://deno.land/x/cheerio@1.0.4/mod.ts";
+} from "https://deno.land/x/cheerio@1.0.7/mod.ts";
 
 type Element = TagElement | TextElement;
 
@@ -21,7 +21,7 @@ const cache = new LRU({
 
 async function ghPinnedRepos(username: string) {
   const $ = await aimer(`https://github.com/${username}`);
-  const pinned = $(".pinned-item-list-item.public").toArray();
+  const pinned = $(".pinned-item-list-item").toArray();
 
   // if empty
   if (!pinned || pinned.length === 0) return [];
@@ -151,7 +151,7 @@ function getSRC($: Cheerio & Root, item: Element) {
 
 function getStars($: Cheerio & Root, item: Element) {
   try {
-    return $(item).find('a[href$="/stargazers"]').text().trim();
+    return parseInt($(item).find('a[href$="/stargazers"]').text().trim());
   } catch (error) {
     return 0;
   }
@@ -159,7 +159,7 @@ function getStars($: Cheerio & Root, item: Element) {
 
 function getForks($: Cheerio & Root, item: Element) {
   try {
-    return $(item).find('a[href$="/network/members"]').text().trim();
+    return parseInt($(item).find('a[href$="/forks"]').text().trim());
   } catch (error) {
     return 0;
   }
