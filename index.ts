@@ -1,12 +1,6 @@
 import LRU from "https://esm.sh/quick-lru@6.0.2";
 import { serve } from "https://deno.land/std@0.121.0/http/server.ts";
-import {
-  Cheerio,
-  cheerio,
-  Root,
-  TagElement,
-  TextElement,
-} from "https://deno.land/x/cheerio@1.0.4/mod.ts";
+import * as cheerio from "https://esm.sh/cheerio@1.0.0-rc.12";
 
 type Element = TagElement | TextElement;
 
@@ -30,7 +24,7 @@ async function ghPinnedRepos(username: string) {
   for (const [index, item] of pinned.entries()) {
     const owner = getOwner($, item);
     const repo = getRepo($, item);
-    const link = "https://github.com/" + (owner || username) + "/" + repo;
+    const link = `https://github.com/${(owner || username).trim()}/${repo.trim()}`;
     const description = getDescription($, item);
     const image = `https://opengraph.githubassets.com/1/${
       owner || username
