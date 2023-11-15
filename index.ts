@@ -26,9 +26,7 @@ async function ghPinnedRepos(username: string) {
     const repo = getRepo($, item);
     const link = `https://github.com/${(owner || username).trim()}/${repo.trim()}`;
     const description = getDescription($, item);
-    const image = `https://opengraph.githubassets.com/1/${
-      owner || username
-    }/${repo}`;
+    const image = `https://opengraph.githubassets.com/1/${(owner || username).trim()}/${repo.trim()}`;
     const website = await getWebsite(link);
     const language = getLanguage($, item);
     const languageColor = getLanguageColor($, item);
@@ -62,11 +60,12 @@ function getOwner($: Cheerio & Root, item: Element) {
 
 function getRepo($: Cheerio & Root, item: Element) {
   try {
-    return $(item).find(".repo").text();
+    return $(item).find(".repo").text().trim();
   } catch (error) {
     return undefined;
   }
 }
+
 
 function getDescription($: Cheerio & Root, item: Element) {
   try {
